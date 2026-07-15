@@ -775,6 +775,16 @@ input:focus-visible {
 
 .fighter {
   --flip: 1;
+  --limb-flip: 1;
+  --attack-origin: 54%;
+  --jump-offset: 0px;
+  --shadow-scale: 1;
+  --shadow-opacity: .48;
+  --skin: #d29a76;
+  --shirt: #16151f;
+  --pants: #315a7d;
+  --shoe: #171820;
+  --kick-fill: linear-gradient(90deg, var(--pants) 0 82%, var(--shoe) 82% 100%);
   --weapon-pan-left: 70%;
   --weapon-water-left: 62%;
   --punch-1-x: 30px;
@@ -809,7 +819,7 @@ input:focus-visible {
   --ko-1-r: -16deg;
   --ko-2-r: -82deg;
   position: absolute;
-  bottom: 8%;
+  bottom: calc(8% + var(--jump-offset));
   left: 25%;
   z-index: 5;
   width: min(29vw, 330px);
@@ -820,12 +830,24 @@ input:focus-visible {
   will-change: left;
 }
 
-.fighter-p1 { --flip: 1; }
+.fighter-p1 {
+  --flip: 1;
+  --skin: #d6a07e;
+  --pants: #315f86;
+  --kick-fill: linear-gradient(90deg, var(--pants) 0 84%, var(--shoe) 84% 100%);
+}
 .fighter-p1.face-left { --flip: -1; }
-.fighter-p2 { --flip: 1; }
+.fighter-p2 {
+  --flip: 1;
+  --skin: #a97453;
+  --pants: #181820;
+  --kick-fill: linear-gradient(90deg, var(--pants) 0 29%, var(--skin) 29% 84%, var(--shoe) 84% 100%);
+}
 .fighter-p2.face-right { --flip: -1; }
 
 .fighter.world-left {
+  --limb-flip: -1;
+  --attack-origin: 46%;
   --weapon-pan-left: 30%;
   --weapon-water-left: 38%;
   --punch-1-x: -30px;
@@ -893,44 +915,171 @@ input:focus-visible {
   width: 68%;
   height: 5%;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.48);
+  background: rgba(0, 0, 0, var(--shadow-opacity));
   filter: blur(7px);
-  transform: translateX(-50%);
+  transform: translate(-50%, var(--jump-offset)) scaleX(var(--shadow-scale));
+  transform-origin: center;
 }
 
-.weapon {
+.attack-limb {
   position: absolute;
-  z-index: 7;
+  left: var(--attack-origin);
+  z-index: 8;
   display: none;
-  font-size: clamp(36px, 5.5vw, 70px);
-  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.42));
+  width: 68%;
+  height: 13%;
+  pointer-events: none;
+  transform: scaleX(var(--limb-flip));
+  transform-origin: left center;
 }
 
-.weapon-pan {
-  top: 26%;
-  left: var(--weapon-pan-left);
+.attack-limb > i,
+.attack-limb > b {
+  position: absolute;
+  display: block;
+  font-style: normal;
+}
+
+.punch-limb {
+  top: 38%;
+}
+
+.punch-limb > i {
+  top: 35%;
+  left: 0;
+  width: 82%;
+  height: 34%;
+  border: 2px solid rgba(31, 18, 25, .42);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--shirt) 0 25%, var(--skin) 25% 100%);
+  box-shadow: inset 0 3px 3px rgba(255,255,255,.18), 0 5px 8px rgba(0,0,0,.35);
+  transform-origin: left center;
+}
+
+.punch-limb > b {
+  top: 15%;
+  left: 76%;
+  width: clamp(19px, 3.6vw, 42px);
+  aspect-ratio: 1.12;
+  border: 2px solid rgba(31, 18, 25, .46);
+  border-radius: 45% 52% 43% 48%;
+  background:
+    radial-gradient(circle at 26% 24%, rgba(255,255,255,.28) 0 7%, transparent 8%),
+    var(--skin);
+  box-shadow: inset -3px -3px rgba(75,37,28,.14), 0 5px 8px rgba(0,0,0,.32);
+}
+
+.punch-limb > b::after {
+  position: absolute;
+  right: 8%;
+  bottom: -10%;
+  width: 46%;
+  height: 38%;
+  border-radius: 50%;
+  background: var(--skin);
+  content: "";
+}
+
+.kick-limb {
+  top: 66%;
+  width: 76%;
+  height: 17%;
+}
+
+.kick-limb > i {
+  top: 36%;
+  left: 0;
+  width: 88%;
+  height: 38%;
+  border: 2px solid rgba(18, 16, 24, .5);
+  border-radius: 999px 70% 70% 999px;
+  background: var(--kick-fill);
+  box-shadow: inset 0 3px 3px rgba(255,255,255,.12), 0 6px 9px rgba(0,0,0,.38);
+  transform-origin: left center;
+}
+
+.kick-limb > b {
+  top: 29%;
+  left: 78%;
+  width: 19%;
+  height: 52%;
+  border: 2px solid rgba(18, 16, 24, .55);
+  border-radius: 35% 75% 35% 40%;
+  background: var(--shoe);
+  box-shadow: 0 5px 8px rgba(0,0,0,.4);
+}
+
+.tool-limb {
+  top: 38%;
+  width: 63%;
+  height: 16%;
+}
+
+.tool-pan {
+  top: 30%;
+}
+
+.tool-limb > i {
+  top: 41%;
+  left: 0;
+  width: 76%;
+  height: 28%;
+  border: 2px solid rgba(31, 18, 25, .42);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--shirt) 0 27%, var(--skin) 27% 100%);
+  box-shadow: inset 0 3px 3px rgba(255,255,255,.16), 0 5px 8px rgba(0,0,0,.34);
+}
+
+.tool-limb > b {
+  top: -34%;
+  left: 65%;
+  font-size: clamp(36px, 5.5vw, 70px);
+  line-height: 1;
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.42));
   transform-origin: 20% 80%;
 }
 
-.weapon-water {
-  top: 33%;
-  left: var(--weapon-water-left);
+.tool-water > b {
+  top: 4%;
+  left: 66%;
+  font-size: clamp(32px, 4.8vw, 58px);
 }
 
 .fighter.action-punch > img {
   animation: fighterPunch 360ms ease-out;
 }
 
+.fighter.action-punch .punch-limb {
+  display: block;
+}
+
+.fighter.action-punch .punch-limb > i {
+  animation: punchArmExtend 360ms cubic-bezier(.15,.82,.25,1);
+}
+
+.fighter.action-punch .punch-limb > b {
+  animation: punchFistExtend 360ms cubic-bezier(.15,.82,.25,1);
+}
+
 .fighter.action-kick > img {
   animation: fighterKick 520ms cubic-bezier(.2, .8, .25, 1);
+}
+
+.fighter.action-kick .kick-limb {
+  display: block;
+  animation: kickExtend 520ms cubic-bezier(.15,.82,.2,1);
 }
 
 .fighter.action-pan > img {
   animation: fighterPanBody 650ms ease-out;
 }
 
-.fighter.action-pan .weapon-pan {
+.fighter.action-pan .tool-pan {
   display: block;
+  animation: panArmSwing 650ms cubic-bezier(.3, .9, .2, 1);
+}
+
+.fighter.action-pan .tool-pan > b {
   animation: panSwing 650ms cubic-bezier(.3, .9, .2, 1);
 }
 
@@ -938,9 +1087,9 @@ input:focus-visible {
   animation: fighterWater 470ms ease-out;
 }
 
-.fighter.action-water .weapon-water {
+.fighter.action-water .tool-water {
   display: block;
-  animation: waterRecoil 470ms ease-out;
+  animation: toolWaterRecoil 470ms ease-out;
 }
 
 .fighter.action-hit > img {
@@ -954,6 +1103,47 @@ input:focus-visible {
 
 .fighter.invulnerable {
   animation: invulnerableBlink 170ms steps(2, end) infinite;
+}
+
+.shield-flash {
+  position: absolute;
+  inset: 4% 4% 0;
+  z-index: 6;
+  border: clamp(2px, .35vw, 5px) solid rgba(103, 232, 255, .82);
+  border-radius: 50% 50% 44% 44%;
+  background: radial-gradient(ellipse at 50% 45%, rgba(98, 218, 255, .04) 40%, rgba(87, 151, 255, .2) 82%, rgba(205, 244, 255, .32));
+  box-shadow: inset 0 0 25px rgba(91, 221, 255, .4), 0 0 24px rgba(77, 200, 255, .7);
+  opacity: 0;
+  transform: scale(.8);
+  pointer-events: none;
+}
+
+.fighter.shielded .shield-flash {
+  opacity: 1;
+  animation: shieldPulse 1.25s ease-in-out infinite alternate;
+}
+
+.shield-timer {
+  position: absolute;
+  top: 1%;
+  left: 50%;
+  z-index: 10;
+  min-width: 38px;
+  padding: 5px 8px;
+  border: 1px solid rgba(206, 247, 255, .8);
+  border-radius: 999px;
+  background: rgba(15, 72, 115, .9);
+  color: #e8fbff;
+  font-size: clamp(10px, 1.6vw, 14px);
+  font-weight: 1000;
+  text-align: center;
+  box-shadow: 0 0 16px rgba(76, 214, 255, .65);
+  opacity: 0;
+  transform: translateX(-50%);
+}
+
+.fighter.shielded .shield-timer {
+  opacity: 1;
 }
 
 .projectiles,
@@ -1021,6 +1211,25 @@ input:focus-visible {
   animation: damageFloat 880ms ease-out forwards;
 }
 
+.shield-block {
+  position: absolute;
+  bottom: 48%;
+  left: 50%;
+  min-width: clamp(58px, 9vw, 96px);
+  padding: 9px 13px;
+  border: 2px solid #bcf7ff;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(52, 193, 242, .95), rgba(88, 84, 225, .95));
+  color: white;
+  font-size: clamp(16px, 2.8vw, 30px);
+  font-weight: 1000;
+  text-align: center;
+  text-shadow: 0 2px 0 #194b87;
+  box-shadow: 0 0 28px rgba(74, 220, 255, .8);
+  transform: translate(-50%, 50%);
+  animation: shieldBlock 680ms ease-out forwards;
+}
+
 .countdown {
   position: absolute;
   inset: 0;
@@ -1077,6 +1286,10 @@ input:focus-visible {
   grid-template-columns: repeat(2, minmax(60px, 1fr));
 }
 
+.move-controls .control-btn {
+  min-height: 49px;
+}
+
 .attack-controls {
   grid-template-columns: repeat(4, minmax(64px, 1fr));
 }
@@ -1102,6 +1315,66 @@ input:focus-visible {
 .move-btn {
   color: #d5c8ff;
   font-size: 29px;
+}
+
+.utility-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-bottom: 3px solid #6dddf5;
+}
+
+.utility-btn > span,
+.utility-btn > b {
+  position: relative;
+  z-index: 2;
+}
+
+.utility-btn > span {
+  font-size: clamp(20px, 3vw, 30px);
+  line-height: 1;
+}
+
+.utility-btn > b {
+  font-size: clamp(8px, 1.25vw, 11px);
+  white-space: nowrap;
+}
+
+.jump-btn {
+  border-bottom-color: #a88cff;
+}
+
+.shield-btn {
+  border-bottom-color: #59dff8;
+}
+
+.shield-btn.active {
+  border-color: rgba(176, 246, 255, .8);
+  background: linear-gradient(145deg, rgba(52, 204, 242, .48), rgba(82, 91, 226, .33));
+  box-shadow: inset 0 1px rgba(255,255,255,.25), 0 0 22px rgba(57, 217, 255, .38);
+}
+
+.utility-btn:disabled {
+  cursor: default;
+  opacity: .68;
+}
+
+.shield-btn.empty {
+  filter: grayscale(1) brightness(.62);
+}
+
+.shield-duration-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 0;
+  height: 100%;
+  background: rgba(3, 43, 77, .42);
+  transition: width 100ms linear;
+  pointer-events: none;
 }
 
 .attack-btn {
@@ -1260,11 +1533,27 @@ input:focus-visible {
   68% { transform: translateX(var(--punch-2-x)) rotate(var(--punch-2-r)) scaleX(var(--flip)); }
 }
 
+@keyframes punchArmExtend {
+  0%, 100% { opacity: 0; transform: scaleX(.08) rotate(-9deg); }
+  34%, 64% { opacity: 1; transform: scaleX(1) rotate(-1deg); }
+}
+
+@keyframes punchFistExtend {
+  0%, 100% { opacity: 0; transform: translateX(-240%) scale(.55) rotate(-12deg); }
+  34%, 64% { opacity: 1; transform: translateX(0) scale(1) rotate(1deg); }
+}
+
 @keyframes fighterKick {
   0%, 100% { transform: translateX(0) rotate(0) scaleX(var(--flip)); }
   22% { transform: translateX(var(--kick-1-x)) rotate(var(--kick-1-r)) scaleX(var(--flip)); }
   52% { transform: translateX(var(--kick-2-x)) translateY(-5px) rotate(var(--kick-2-r)) scaleX(var(--flip)) scale(1.05); }
   76% { transform: translateX(var(--kick-3-x)) rotate(var(--kick-3-r)) scaleX(var(--flip)); }
+}
+
+@keyframes kickExtend {
+  0%, 100% { opacity: 0; transform: scaleX(var(--limb-flip)) rotate(42deg) scaleX(.12); }
+  24% { opacity: 1; }
+  48%, 68% { opacity: 1; transform: scaleX(var(--limb-flip)) rotate(-8deg) scaleX(1); }
 }
 
 @keyframes fighterPanBody {
@@ -1273,11 +1562,17 @@ input:focus-visible {
   58% { transform: translateX(var(--pan-2-x)) rotate(var(--pan-2-r)) scaleX(var(--flip)) scale(1.03); }
 }
 
+@keyframes panArmSwing {
+  0%, 100% { opacity: 0; transform: scaleX(var(--limb-flip)) rotate(-64deg) scale(.45); }
+  18% { opacity: 1; }
+  56%, 72% { opacity: 1; transform: scaleX(var(--limb-flip)) rotate(7deg) scale(1); }
+}
+
 @keyframes panSwing {
-  0% { opacity: 0; transform: rotate(var(--pan-start-r)) scaleX(var(--flip)) scale(.5); }
+  0% { opacity: 0; transform: rotate(-32deg) scale(.5); }
   20% { opacity: 1; }
-  65% { opacity: 1; transform: rotate(var(--pan-hit-r)) scaleX(var(--flip)) scale(1.12); }
-  100% { opacity: 0; transform: rotate(var(--pan-end-r)) scaleX(var(--flip)); }
+  65% { opacity: 1; transform: rotate(18deg) scale(1.12); }
+  100% { opacity: 0; transform: rotate(30deg); }
 }
 
 @keyframes fighterWater {
@@ -1291,6 +1586,12 @@ input:focus-visible {
   25%, 70% { opacity: 1; transform: translateX(var(--recoil-1-x)) scaleX(var(--flip)); }
   48% { transform: translateX(var(--recoil-2-x)) rotate(var(--recoil-2-r)) scaleX(var(--flip)); }
   100% { opacity: 0; }
+}
+
+@keyframes toolWaterRecoil {
+  0%, 100% { opacity: 0; transform: scaleX(var(--limb-flip)) translateX(-18%) scale(.72); }
+  24%, 72% { opacity: 1; transform: scaleX(var(--limb-flip)) translateX(0) scale(1); }
+  46% { transform: scaleX(var(--limb-flip)) translateX(-5%) rotate(-4deg) scale(.96); }
 }
 
 @keyframes fighterHit {
@@ -1308,6 +1609,17 @@ input:focus-visible {
 
 @keyframes invulnerableBlink {
   50% { opacity: .38; }
+}
+
+@keyframes shieldPulse {
+  from { transform: scale(.94); filter: hue-rotate(-8deg) brightness(.92); }
+  to { transform: scale(1.03); filter: hue-rotate(12deg) brightness(1.2); }
+}
+
+@keyframes shieldBlock {
+  0% { opacity: 0; transform: translate(-50%, 50%) scale(.35); }
+  28%, 58% { opacity: 1; transform: translate(-50%, 50%) scale(1.16); }
+  100% { opacity: 0; transform: translate(-50%, 20%) scale(1.35); }
 }
 
 @keyframes hitBurst {
@@ -1398,7 +1710,7 @@ input:focus-visible {
   }
 
   .fighter {
-    bottom: 6%;
+    bottom: calc(6% + var(--jump-offset));
     width: min(49vw, 270px);
     height: min(49vh, 430px);
   }
@@ -1436,10 +1748,15 @@ input:focus-visible {
     border-radius: 15px;
   }
 
-  .move-btn {
-    min-height: 130px;
-    font-size: 25px;
+  .move-btn,
+  .utility-btn {
+    min-height: 62px;
   }
+
+  .move-btn { font-size: 25px; }
+
+  .utility-btn > span { font-size: 24px; }
+  .utility-btn > b { font-size: 8px; }
 
   .attack-btn span {
     font-size: 26px;
@@ -1518,7 +1835,7 @@ input:focus-visible {
   }
 
   .fighter {
-    bottom: 4%;
+    bottom: calc(4% + var(--jump-offset));
     height: 73vh;
   }
 
@@ -1675,17 +1992,23 @@ input:focus-visible {
           <div id="fighter-p1" class="fighter fighter-p1" style="left: 25%">
             <div class="shadow"></div>
             <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-character="basmalla" alt="بسملة" draggable="false" />
-            <span class="weapon weapon-pan">🍳</span>
-            <span class="weapon weapon-water">🔫</span>
+            <span class="attack-limb punch-limb" aria-hidden="true"><i></i><b></b></span>
+            <span class="attack-limb kick-limb" aria-hidden="true"><i></i><b></b></span>
+            <span class="attack-limb tool-limb tool-pan" aria-hidden="true"><i></i><b>🍳</b></span>
+            <span class="attack-limb tool-limb tool-water" aria-hidden="true"><i></i><b>🔫</b></span>
             <span class="shield-flash"></span>
+            <span class="shield-timer" aria-hidden="true"></span>
           </div>
 
           <div id="fighter-p2" class="fighter fighter-p2" style="left: 75%">
             <div class="shadow"></div>
             <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-character="ahmed" alt="أحمد" draggable="false" />
-            <span class="weapon weapon-pan">🍳</span>
-            <span class="weapon weapon-water">🔫</span>
+            <span class="attack-limb punch-limb" aria-hidden="true"><i></i><b></b></span>
+            <span class="attack-limb kick-limb" aria-hidden="true"><i></i><b></b></span>
+            <span class="attack-limb tool-limb tool-pan" aria-hidden="true"><i></i><b>🍳</b></span>
+            <span class="attack-limb tool-limb tool-water" aria-hidden="true"><i></i><b>🔫</b></span>
             <span class="shield-flash"></span>
+            <span class="shield-timer" aria-hidden="true"></span>
           </div>
 
           <div id="projectiles" class="projectiles" aria-hidden="true"></div>
@@ -1698,6 +2021,12 @@ input:focus-visible {
           <div class="move-controls">
             <button class="control-btn move-btn" data-move="left" aria-label="تحرك لليسار">◀</button>
             <button class="control-btn move-btn" data-move="right" aria-label="تحرك لليمين">▶</button>
+            <button id="jumpBtn" class="control-btn utility-btn jump-btn" aria-label="اقفز">
+              <span>⬆️</span><b>نُط</b>
+            </button>
+            <button id="shieldBtn" class="control-btn utility-btn shield-btn" aria-label="استخدم الدرع">
+              <span>🛡️</span><b id="shieldLabel">درع ×2</b><i class="shield-duration-mask"></i>
+            </button>
           </div>
 
           <div class="attack-controls">
@@ -1776,6 +2105,9 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     copyBtn: $("#copyBtn"),
     shareBtn: $("#shareBtn"),
     cancelHostBtn: $("#cancelHostBtn"),
+    jumpBtn: $("#jumpBtn"),
+    shieldBtn: $("#shieldBtn"),
+    shieldLabel: $("#shieldLabel"),
     fighterP1: $("#fighter-p1"),
     fighterP2: $("#fighter-p2"),
     p1Health: $("#p1Health"),
@@ -1801,13 +2133,17 @@ document.querySelectorAll("[data-character]").forEach((image) => {
   };
 
   const CONFIG = {
-    version: 1,
+    version: 2,
     minX: 7,
     maxX: 93,
     moveSpeed: 26,
+    jumpVelocity: 58,
+    gravity: 118,
     snapshotEvery: 50,
     maxHealth: 100,
     lives: 3,
+    shieldUses: 2,
+    shieldDuration: 30000,
     respawnDelay: 1650,
     respawnShield: 1050,
     attacks: {
@@ -1902,6 +2238,10 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       actionSeq: 0,
       stunUntil: 0,
       invulnerableUntil: 0,
+      shieldUntil: 0,
+      shieldsLeft: CONFIG.shieldUses,
+      y: 0,
+      vy: 0,
       ko: false,
       respawnAt: 0,
       cooldowns: { punch: 0, kick: 0, pan: 0, water: 0 },
@@ -2014,6 +2354,13 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     } else if (kind === "water") {
       tone(510, 0.1, { endFrequency: 980, type: "sine", volume: 0.035 });
       setTimeout(() => tone(620, 0.08, { endFrequency: 1050, type: "sine", volume: 0.028 }), 65);
+    } else if (kind === "shield") {
+      tone(310, 0.18, { endFrequency: 760, type: "triangle", volume: 0.045 });
+      setTimeout(() => tone(940, 0.16, { endFrequency: 620, type: "sine", volume: 0.035 }), 55);
+    } else if (kind === "block") {
+      tone(880, 0.12, { endFrequency: 390, type: "square", volume: 0.035 });
+    } else if (kind === "jump") {
+      tone(260, 0.13, { endFrequency: 520, type: "triangle", volume: 0.025 });
     } else if (kind === "hit") {
       tone(105, 0.19, { endFrequency: 42, type: "square", volume: 0.06 });
     } else if (kind === "ko") {
@@ -2160,6 +2507,10 @@ document.querySelectorAll("[data-character]").forEach((image) => {
         inputs.p2[message.key] = Boolean(message.pressed);
       } else if (message.type === "attack" && CONFIG.attacks[message.action]) {
         attemptAttack("p2", message.action);
+      } else if (message.type === "jump") {
+        attemptJump("p2");
+      } else if (message.type === "shield") {
+        attemptShield("p2");
       } else if (message.type === "rematch") {
         beginMatch();
       }
@@ -2281,6 +2632,8 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     });
 
     if (state.phase === "playing") {
+      updateVertical("p1", dt);
+      updateVertical("p2", dt);
       moveFighter("p1", dt, now);
       moveFighter("p2", dt, now);
       updateFacing();
@@ -2306,6 +2659,22 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     );
   }
 
+  function updateVertical(key, dt) {
+    const fighter = state[key];
+    if (fighter.y <= 0 && fighter.vy <= 0) {
+      fighter.y = 0;
+      fighter.vy = 0;
+      return;
+    }
+
+    fighter.y += fighter.vy * dt;
+    fighter.vy -= CONFIG.gravity * dt;
+    if (fighter.y <= 0) {
+      fighter.y = 0;
+      fighter.vy = 0;
+    }
+  }
+
   function updateFacing() {
     if (Math.abs(state.p1.x - state.p2.x) < 0.05) return;
     state.p1.facing = state.p2.x > state.p1.x ? 1 : -1;
@@ -2325,6 +2694,14 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     if (now >= botBrainAt) {
       inputs.p2.left = false;
       inputs.p2.right = false;
+
+      if (bot.shieldsLeft > 0 && now >= bot.shieldUntil && bot.hp <= 58 && Math.random() < 0.32) {
+        attemptShield("p2");
+        botBrainAt = now + 500 + Math.random() * 420;
+        return;
+      }
+
+      if (bot.y <= 0.05 && Math.random() < 0.18) attemptJump("p2");
 
       if (distance > 19) {
         const toward = human.x < bot.x ? "left" : "right";
@@ -2348,6 +2725,32 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       inputs.p2.left = false;
       inputs.p2.right = false;
     }
+  }
+
+  function attemptJump(fighterKey) {
+    const now = Date.now();
+    const fighter = state[fighterKey];
+    if (!fighter || state.phase !== "playing") return false;
+    if (fighter.ko || now < fighter.stunUntil || fighter.y > 0.05) return false;
+
+    fighter.y = 0.01;
+    fighter.vy = CONFIG.jumpVelocity;
+    emitFx({ kind: "jump", owner: fighterKey });
+    if (mode === "online") sendSnapshot(true);
+    return true;
+  }
+
+  function attemptShield(fighterKey) {
+    const now = Date.now();
+    const fighter = state[fighterKey];
+    if (!fighter || state.phase !== "playing") return false;
+    if (fighter.ko || now < fighter.stunUntil || now < fighter.shieldUntil || fighter.shieldsLeft <= 0) return false;
+
+    fighter.shieldsLeft -= 1;
+    fighter.shieldUntil = now + CONFIG.shieldDuration;
+    emitFx({ kind: "shield", target: fighterKey, x: fighter.x, y: fighter.y || 0 });
+    if (mode === "online") sendSnapshot(true);
+    return true;
   }
 
   function attemptAttack(attackerKey, action) {
@@ -2403,6 +2806,7 @@ document.querySelectorAll("[data-character]").forEach((image) => {
           id: `shot-${++projectileSequence}`,
           owner: pending.attackerKey,
           x: attacker.x + attacker.facing * 5,
+          y: attacker.y || 0,
           dir: attacker.facing,
           damage: config.damage,
           createdAt: now,
@@ -2416,7 +2820,8 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       const targetDirection = Math.sign(target.x - attacker.x) || attacker.facing;
       const isFacingTarget = targetDirection === attacker.facing;
       const inRange = Math.abs(target.x - attacker.x) <= config.range;
-      if (isFacingTarget && inRange) {
+      const inVerticalRange = Math.abs((target.y || 0) - (attacker.y || 0)) <= 18;
+      if (isFacingTarget && inRange && inVerticalRange) {
         applyDamage(targetKey, pending.attackerKey, pending.action, config, now);
       }
     });
@@ -2429,7 +2834,8 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       const targetKey = projectile.owner === "p1" ? "p2" : "p1";
       const target = state[targetKey];
       const crossedTarget = Math.abs(projectile.x - target.x) <= 4.2;
-      if (crossedTarget && !target.ko) {
+      const crossedHeight = Math.abs((projectile.y || 0) - (target.y || 0)) <= 18;
+      if (crossedTarget && crossedHeight && !target.ko) {
         applyDamage(targetKey, projectile.owner, "water", CONFIG.attacks.water, now);
       } else if (projectile.x > CONFIG.minX - 5 && projectile.x < CONFIG.maxX + 5 && now - projectile.createdAt < 3000) {
         survivors.push(projectile);
@@ -2441,7 +2847,12 @@ document.querySelectorAll("[data-character]").forEach((image) => {
   function applyDamage(targetKey, attackerKey, action, config, now) {
     const target = state[targetKey];
     const attacker = state[attackerKey];
-    if (target.ko || now < target.invulnerableUntil) return;
+    if (target.ko) return false;
+    if (now < target.shieldUntil) {
+      emitFx({ kind: "block", target: targetKey, action, x: target.x, y: target.y || 0 });
+      return false;
+    }
+    if (now < target.invulnerableUntil) return false;
 
     target.hp = clamp(target.hp - config.damage, 0, CONFIG.maxHealth);
     target.stunUntil = now + config.stun;
@@ -2458,6 +2869,7 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       action,
       target: targetKey,
       x: target.x,
+      y: target.y || 0,
       damage: config.damage,
       word: hitWords[Math.floor(Math.random() * hitWords.length)],
     });
@@ -2465,6 +2877,9 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     if (target.hp <= 0) {
       target.lives -= 1;
       target.ko = true;
+      target.shieldUntil = 0;
+      target.y = 0;
+      target.vy = 0;
       target.stunUntil = Number.MAX_SAFE_INTEGER;
       target.respawnAt = target.lives > 0 ? now + CONFIG.respawnDelay : 0;
       setFighterAction(targetKey, "ko", 1200, now);
@@ -2482,6 +2897,7 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     }
 
     if (mode === "online") sendSnapshot(true);
+    return true;
   }
 
   function respawnFighter(key, now) {
@@ -2491,6 +2907,9 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     fighter.respawnAt = 0;
     fighter.stunUntil = 0;
     fighter.invulnerableUntil = now + CONFIG.respawnShield;
+    fighter.shieldUntil = 0;
+    fighter.y = 0;
+    fighter.vy = 0;
     fighter.x = key === "p1" ? 20 : 80;
     fighter.cooldowns = { punch: 0, kick: 0, pan: 0, water: 0 };
     setFighterAction(key, "idle", 0, now);
@@ -2529,6 +2948,21 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       playSound(event.action);
       return;
     }
+    if (event.kind === "jump") {
+      playSound("jump");
+      return;
+    }
+    if (event.kind === "shield") {
+      playSound("shield");
+      spawnShieldFx(event, "درع!");
+      return;
+    }
+    if (event.kind === "block") {
+      playSound("block");
+      spawnShieldFx(event, "صدّ!");
+      if (navigator.vibrate) navigator.vibrate(35);
+      return;
+    }
     if (event.kind === "go") {
       playSound("go");
       showRoundMessage(event.text || "اتخانقوا! 🔥", 1050);
@@ -2556,20 +2990,38 @@ document.querySelectorAll("[data-character]").forEach((image) => {
   }
 
   function spawnHitFx(event) {
+    const hitHeight = {
+      punch: 51,
+      kick: 30,
+      pan: 69,
+      water: 49,
+    }[event.action] || 48;
     const burst = document.createElement("div");
     burst.className = event.action === "water" ? "water-splash" : "hit-burst";
     burst.style.left = `${event.x}%`;
+    burst.style.bottom = `calc(${hitHeight}% + ${Math.max(0, event.y || 0)}%)`;
     burst.textContent = event.action === "water" ? "💦" : event.word;
     els.fxLayer.appendChild(burst);
 
     const damage = document.createElement("div");
     damage.className = "floating-damage";
     damage.style.left = `${event.x}%`;
+    damage.style.bottom = `calc(${Math.min(78, hitHeight + 10)}% + ${Math.max(0, event.y || 0)}%)`;
     damage.textContent = `-${event.damage}`;
     els.fxLayer.appendChild(damage);
 
     setTimeout(() => burst.remove(), 760);
     setTimeout(() => damage.remove(), 980);
+  }
+
+  function spawnShieldFx(event, text) {
+    const block = document.createElement("div");
+    block.className = "shield-block";
+    block.style.left = `${event.x}%`;
+    block.style.bottom = `calc(48% + ${Math.max(0, event.y || 0)}%)`;
+    block.textContent = text;
+    els.fxLayer.appendChild(block);
+    setTimeout(() => block.remove(), 720);
   }
 
   function showRoundMessage(text, duration = 1100) {
@@ -2600,10 +3052,20 @@ document.querySelectorAll("[data-character]").forEach((image) => {
   function renderFighter(key, element) {
     const fighter = state[key];
     element.style.left = `${fighter.x.toFixed(3)}%`;
+    const jumpOffset = (els.arena?.clientHeight || 0) * Math.max(0, fighter.y || 0) / 100;
+    element.style.setProperty("--jump-offset", `${jumpOffset.toFixed(2)}px`);
+    element.style.setProperty("--shadow-scale", Math.max(0.5, 1 - (fighter.y || 0) / 30).toFixed(3));
+    element.style.setProperty("--shadow-opacity", Math.max(0.16, 0.48 - (fighter.y || 0) / 55).toFixed(3));
     element.classList.toggle("world-left", fighter.facing < 0);
     element.classList.toggle("face-left", key === "p1" && fighter.facing < 0);
     element.classList.toggle("face-right", key === "p2" && fighter.facing > 0);
     element.classList.toggle("invulnerable", fighter.invulnerableUntil > state.serverNow);
+    element.classList.toggle("airborne", (fighter.y || 0) > 0.05);
+    element.classList.toggle("shielded", fighter.shieldUntil > state.serverNow);
+
+    const shieldTimer = element.querySelector(".shield-timer");
+    const shieldRemaining = Math.max(0, fighter.shieldUntil - state.serverNow);
+    shieldTimer.textContent = shieldRemaining > 0 ? `${Math.ceil(shieldRemaining / 1000)}ث` : "";
 
     const renderToken = `${fighter.action}:${fighter.actionSeq || 0}`;
     if (element.dataset.renderToken !== renderToken) {
@@ -2675,6 +3137,7 @@ document.querySelectorAll("[data-character]").forEach((image) => {
         els.projectiles.appendChild(node);
       }
       node.style.left = `${projectile.x}%`;
+      node.style.bottom = `calc(43% + ${Math.max(0, projectile.y || 0)}%)`;
       node.style.setProperty("--shot-dir", projectile.dir);
     });
 
@@ -2695,6 +3158,22 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       button.classList.toggle("on-cooldown", ratio > 0);
       button.querySelector(".cooldown-mask").style.height = `${(ratio * 100).toFixed(1)}%`;
     });
+
+    const shieldRemaining = Math.max(0, fighter.shieldUntil - state.serverNow);
+    const shieldActive = shieldRemaining > 0;
+    els.shieldBtn.classList.toggle("active", shieldActive);
+    els.shieldBtn.classList.toggle("empty", fighter.shieldsLeft <= 0 && !shieldActive);
+    els.shieldBtn.disabled = state.phase !== "playing" || fighter.ko || shieldActive || fighter.shieldsLeft <= 0;
+    els.shieldLabel.textContent = shieldActive
+      ? `حماية ${Math.ceil(shieldRemaining / 1000)}ث`
+      : fighter.shieldsLeft > 0
+        ? `درع ×${fighter.shieldsLeft}`
+        : "الدرع خلص";
+    const shieldMask = els.shieldBtn.querySelector(".shield-duration-mask");
+    shieldMask.style.width = shieldActive ? `${(shieldRemaining / CONFIG.shieldDuration * 100).toFixed(1)}%` : "0%";
+
+    els.jumpBtn.disabled = state.phase !== "playing" || fighter.ko || (fighter.y || 0) > 0.05;
+    els.jumpBtn.classList.toggle("active", (fighter.y || 0) > 0.05);
   }
 
   function renderResult() {
@@ -2733,6 +3212,22 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     }
   }
 
+  function triggerLocalJump() {
+    ensureAudio();
+    els.jumpBtn.classList.add("pressed");
+    setTimeout(() => els.jumpBtn.classList.remove("pressed"), 120);
+    if (role === "guest") send({ type: "jump" });
+    else attemptJump("p1");
+  }
+
+  function triggerLocalShield() {
+    ensureAudio();
+    els.shieldBtn.classList.add("pressed");
+    setTimeout(() => els.shieldBtn.classList.remove("pressed"), 120);
+    if (role === "guest") send({ type: "shield" });
+    else attemptShield("p1");
+  }
+
   function clearLocalMoves() {
     setMove("left", false);
     setMove("right", false);
@@ -2758,6 +3253,15 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       });
     });
 
+    els.jumpBtn.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      triggerLocalJump();
+    });
+    els.shieldBtn.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      triggerLocalShield();
+    });
+
     const moveKeys = {
       ArrowLeft: "left",
       KeyA: "left",
@@ -2771,6 +3275,8 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       KeyL: "pan",
       KeyI: "water",
     };
+    const jumpKeys = new Set(["ArrowUp", "KeyW"]);
+    const shieldKeys = new Set(["ShiftLeft", "ShiftRight", "KeyQ"]);
 
     window.addEventListener("keydown", (event) => {
       if (els.game.hidden) return;
@@ -2780,6 +3286,12 @@ document.querySelectorAll("[data-character]").forEach((image) => {
       } else if (attackKeys[event.code] && !event.repeat) {
         event.preventDefault();
         triggerLocalAttack(attackKeys[event.code]);
+      } else if (jumpKeys.has(event.code) && !event.repeat) {
+        event.preventDefault();
+        triggerLocalJump();
+      } else if (shieldKeys.has(event.code) && !event.repeat) {
+        event.preventDefault();
+        triggerLocalShield();
       }
     });
 
@@ -2898,6 +3410,8 @@ document.querySelectorAll("[data-character]").forEach((image) => {
     getState: () => JSON.parse(JSON.stringify(state)),
     startBotMatch,
     attack: triggerLocalAttack,
+    jump: triggerLocalJump,
+    shield: triggerLocalShield,
     move: setMove,
     config: CONFIG,
   };
